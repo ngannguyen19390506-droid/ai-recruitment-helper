@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Interview Questions Generator</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --text:#1e293b;
+      --muted:#64748b;
+      --primary:#2563eb;
+      --primary-600:#1d4ed8;
+      --primary-100:#e0e7ff;
+      --ring:#c7d2fe;
+      --success:#16a34a;
+      --danger:#ef4444;
+      --shadow: 0 10px 25px rgba(15,23,42,.08);
+      --radius:14px;
+      --border:#eef2ff;
+      --chip:#eff6ff;
+      --chip-bd:#dbeafe;
+    }
+    *{box-sizing:border-box}
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+    }
+    .wrap{ max-width: 880px; margin: 28px auto; padding: 0 18px; }
+    .card{ background:var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px; border: 1px solid var(--border); }
+    .title{ display:flex; gap:12px; align-items:center; margin:0 0 6px; font-size: clamp(22px, 2.2vw, 28px); font-weight: 800; }
+    .title .em{ display:grid; place-items:center; width:40px;height:40px;border-radius:12px; background:var(--primary-100); color:var(--primary); font-size:20px; }
+    .sub{ margin:0 0 18px; color:var(--muted) }
+    .row{ display:grid; gap:14px; margin: 14px 0 }
+    label{ font-weight: 700; display:block; margin-bottom:6px }
+    .req{ color:var(--danger) }
+    input, select, textarea{
+      width:100%; border:1px solid #e5e7eb; border-radius:10px; padding: 12px 14px; font-size: 15px; outline:none;
+      transition: .15s border-color, .15s box-shadow; background:#fff;
+    }
+    input:focus, select:focus, textarea:focus{ border-color: var(--ring); box-shadow: 0 0 0 4px rgba(199,210,254,.6); }
+    textarea{ min-height: 140px; resize: vertical; line-height:1.5 }
+    small.hint{ color:var(--muted); display:block; margin-top:6px }
+    .actions{ margin-top: 20px; display:flex; gap:12px; align-items:center; }
+    button{
+      background:var(--primary); color:white; border:none; padding: 12px 18px; border-radius: 999px; font-weight: 700; letter-spacing:.2px;
+      cursor:pointer; transition:.15s background, .15s transform; display:inline-flex; gap:10px; align-items:center; box-shadow: 0 8px 22px rgba(37,99,235,.2);
+    }
+    button:hover{ background:var(--primary-600) }
+    button:disabled{ opacity:.7; cursor:not-allowed; filter: grayscale(.1); box-shadow:none; }
+
+    .spinner{ width:16px;height:16px;border:2px solid rgba(255,255,255,.5); border-top-color:#fff;border-radius:50%; animation:spin .7s linear infinite }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ===== Result UI (TABLE) ===== */
+    .output{ margin-top:22px; background:#fff; border:1px solid var(--border); border-radius:14px; padding:16px; }
+    .ok{ color:var(--success); font-weight:700; margin:0 0 6px }
+    .err{ color:var(--danger); font-weight:700; margin:0 0 6px }
+    .muted{ color:var(--muted) }
+
+    .toolbar{ display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; align-items:center; margin:8px 0 14px; }
+    .toolbar-left{ display:flex; gap:8px; align-items:center; }
+    .toolbar-right{ display:flex; gap:8px; align-items:center; }
+    .btn-ghost{ background:#fff; color:var(--primary); border:1px solid var(--chip-bd); box-shadow:none; padding:10px 14px; border-radius:999px; font-weight:700 }
+    .btn-ghost:hover{ background:#f8fafc }
+
+    .qtable-wrap{ border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+    .qtable{ width:100%; border-collapse:separate; border-spacing:0; }
+    .qtable thead th{
+      background:#f8fafc;
+      color:#0f172a;
+      font-weight:800;
+      text-align:left;
+      padding:14px 16px;
+      font-size:14px;
+      border-bottom:1px solid var(--border);
+    }
+    .qtable tbody td{
+      padding:16px;
+      vertical-align:top;
+      border-bottom:1px solid var(--border);
+      font-size:15px;
+    }
+    .qtable tbody tr:hover{ background:#fafbff }
+    .qtable th:first-child, .qtable td:first-child{ width:54px }
+    .qtable th:nth-child(2), .qtable td:nth-child(2){ width:120px }
+
+    /* badge */
+    .badge{
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:12px; font-weight:700; padding:4px 10px;
+      border-radius:999px; border:1px solid var(--chip-bd);
+      background:#eff6ff; color:#2563eb;
+    }
+    .dot{ width:8px;height:8px;border-radius:999px;background:#2563eb }
+    .type-behavioral .badge{ background:#fff7ed; border-color:#fed7aa; color:#c2410c }
+    .type-behavioral .dot{ background:#f59e0b }
+    .type-scenario .badge{ background:#ecfdf5; border-color:#bbf7d0; color:#065f46 }
+    .type-scenario .dot{ background:#10b981 }
+
+    @media (max-width:720px){
+      .qtable th:nth-child(2), .qtable td:nth-child(2){ width:auto }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1 class="title">
+        <span class="em">📋</span>
+        AI Interview Questions Generator
+      </h1>
+      <p class="sub">Tạo câu hỏi phỏng vấn chuyên nghiệp trong vài giây</p>
+
+      <form id="form">
+        <div class="row">
+          <label for="name">Tên ứng viên <span class="req">*</span></label>
+          <input id="name" name="name" type="text" placeholder="VD: Nguyen Van A" required />
+        </div>
+
+        <div class="row">
+          <label for="position">Vị trí ứng tuyển <span class="req">*</span></label>
+          <select id="position" name="position" required>
+            <option value="">-- Chọn vị trí --</option>
+            <option>Frontend Developer</option>
+            <option>Backend Developer</option>
+            <option>Fullstack Developer</option>
+            <option>QA/QC Engineer</option>
+            <option>DevOps Engineer</option>
+            <option>Data Analyst</option>
+            <option>Mobile Developer</option>
+            <option>Project Manager</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label for="experience">Kinh nghiệm làm việc (Tóm tắt từ CV) <span class="req">*</span></label>
+          <textarea id="experience" name="experience" required
+            placeholder="VD:
+- 5 years working with Java/Spring Boot
+- Developed microservices architecture
+- Led team of 3 developers
+- Experience integrating third-party services"></textarea>
+          <small class="hint">💡 Copy từ CV của ứng viên, tóm tắt các điểm quan trọng</small>
+        </div>
+
+        <div class="row">
+          <label for="skills">Kỹ năng chính <span class="req">*</span></label>
+          <input id="skills" name="skills" type="text" required
+                 placeholder="VD: Java, Spring Boot, MySQL, Docker, REST API, Git" />
+          <small class="hint">🧩 Liệt kê các kỹ năng kỹ thuật, ngôn ngữ lập trình, công cụ</small>
+        </div>
+
+        <div class="actions">
+          <button id="submitBtn" type="submit">
+            <span class="icon">💡</span> Tạo câu hỏi phỏng vấn
+          </button>
+          <div id="state" class="muted"></div>
+        </div>
+      </form>
+
+      <div id="result" class="output" hidden>
+        <p id="status" class="ok">Đã tạo câu hỏi thành công.</p>
+
+        <div class="toolbar">
+          <div class="toolbar-left muted" id="meta"></div>
+        </div>
+
+        <div id="listWrap"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const $ = (s) => document.querySelector(s);
+    const form = $('#form');
+    const submitBtn = $('#submitBtn');
+    const state = $('#state');
+    const out = $('#result');
+    const statusEl = $('#status');
+    const listWrap = $('#listWrap');
+    const metaEl = $('#meta');
+  
+    function setLoading(on){
+      if(on){
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span class="spinner"></span> Đang tạo...`;
+        state.textContent = 'Gọi /api/generate-questions ...';
+      }else{
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span class="icon">💡</span> Tạo câu hỏi phỏng vấn`;
+        state.textContent = '';
+      }
+    }
+  
+    function typeClass(t=''){
+      const k = String(t).toLowerCase();
+      if(k.includes('behavior')) return 'type-behavioral';
+      if(k.includes('scenario')) return 'type-scenario';
+      return 'type-technical';
+    }
+  
+    function renderRows(questions){
+      if(!Array.isArray(questions) || !questions.length){
+        listWrap.innerHTML = `<p class="muted">Không có câu hỏi nào được trả về.</p>`;
+        metaEl.textContent = '';
+        return;
+      }
+      const counts = questions.reduce((m,q)=>{
+        const t = (q.type||'').toLowerCase();
+        if(t.includes('behavior')) m.beh++;
+        else if(t.includes('scenario')) m.scn++;
+        else m.tech++;
+        return m;
+      }, {tech:0, beh:0, scn:0});
+      metaEl.textContent = `Tổng ${questions.length} câu · Technical: ${counts.tech} · Behavioral: ${counts.beh} · Scenario: ${counts.scn}`;
+  
+      const rows = questions.map(q=>{
+        const t = q.type || 'Question';
+        const cls = typeClass(t);
+        const text = (q.question || '').replace(/\n/g,'<br>');
+        return `
+          <tr class="${cls}">
+            <td>${q.no ?? ''}</td>
+            <td><span class="badge"><span class="dot"></span>${t}</span></td>
+            <td>${text}</td>
+          </tr>
+        `;
+      }).join('');
+  
+      listWrap.innerHTML = `
+        <div class="qtable-wrap">
+          <table class="qtable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Loại</th>
+                <th>Câu hỏi</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+    }
+  
+    // Bóc/parse JSON từ raw model message
+    function tryParseQuestionsFromRaw(raw){
+      if(!raw) return null;
+      let s = String(raw);
+  
+      // Ưu tiên khối ```json ... ```
+      const m = s.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+      if (m && m[1]) s = m[1].trim();
+      else {
+        // Cắt từ { đầu tiên đến } cuối cùng
+        const i = s.indexOf('{');
+        const j = s.lastIndexOf('}');
+        if (i !== -1 && j !== -1 && j > i) s = s.slice(i, j+1).trim();
+      }
+  
+      try {
+        const obj = JSON.parse(s);
+        if (obj && Array.isArray(obj.questions)) return obj.questions;
+      } catch {}
+  
+      // Sửa nhẹ: đổi backtick -> " và bỏ dấu phẩy thừa
+      s = s.replace(/`/g, '"').replace(/,\s*([}\]])/g, '$1');
+      try {
+        const obj = JSON.parse(s);
+        if (obj && Array.isArray(obj.questions)) return obj.questions;
+      } catch {}
+  
+      return null;
+    }
+  
+    function renderRawFallback(raw){
+      const cleaned = (raw||'').replace(/```json|```/g,'').trim();
+      listWrap.innerHTML = `
+        <p class="muted">Server trả dữ liệu nguyên văn (raw). Có thể model trả JSON chưa chuẩn.</p>
+        <pre style="white-space:pre-wrap;background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:12px;font-size:14px;">${cleaned}</pre>
+      `;
+      metaEl.textContent = '';
+    }
+  
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+  
+      const payload = {
+        name: $('#name').value.trim(),
+        position: $('#position').value.trim(),
+        experience: $('#experience').value.trim(),
+        skills: $('#skills').value.trim(),
+      };
+  
+      setLoading(true);
+      out.hidden = true;
+  
+      try{
+        const res = await fetch('/api/generate-questions', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(payload),
+        });
+  
+        const data = await res.json().catch(()=> ({}));
+  
+        if (res.ok && data && (Array.isArray(data.questions) || data.raw)) {
+          statusEl.className = 'ok';
+          statusEl.textContent = 'Đã tạo câu hỏi thành công.';
+  
+          if (Array.isArray(data.questions) && data.questions.length){
+            renderRows(data.questions);
+          } else {
+            const parsedQs = tryParseQuestionsFromRaw(data.raw);
+            if (parsedQs && parsedQs.length){
+              statusEl.textContent = 'Đã xử lý dữ liệu từ phản hồi của AI thành công.';
+              renderRows(parsedQs);
+            } else {
+              renderRawFallback(data.raw);
+            }
+          }
+          out.hidden = false;
+        } else {
+          throw new Error((data && data.error) || 'Không tạo được câu hỏi.');
+        }
+      } catch(err){
+        statusEl.className = 'err';
+        statusEl.textContent = 'Lỗi: ' + (err.message || 'Không xác định');
+        listWrap.innerHTML = '';
+        metaEl.textContent = '';
+        out.hidden = false;
+      } finally{
+        setLoading(false);
+      }
+    });
+  </script>  
+  
+</body>
+</html>

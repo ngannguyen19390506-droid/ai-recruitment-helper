@@ -1,16 +1,22 @@
-# dependencies
+# Node modules
 node_modules/
+
+# Environment files (API keys, secrets)
+.env
+
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# environment variables
-.env
-
-# system files
+# OS generated files
 .DS_Store
 Thumbs.db
 
-# optional
+# IDE configs
 .idea/
 .vscode/
+
+# Build outputs
+dist/
+build/
