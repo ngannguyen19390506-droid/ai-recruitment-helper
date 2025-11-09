@@ -46,14 +46,17 @@ cd ai-recruitment-helper
 ```markdown
 ## 📁 Cấu trúc thư mục
 ai-recruitment-helper/
-├── public/               # Giao diện HTML/CSS/JS
-│   └── index.html
-├── server.js             # File server chính
-├── test-gemini.mjs       # File test API Gemini
-├── .env.example          # Mẫu file env
+├── public/
+│   ├── index.html        ← giao diện form + bảng câu hỏi
+│   └── demo-ui.png       ← ảnh minh họa
+├── server.js             ← server Express gọi Gemini API
+├── test-gemini.mjs       ← file test API riêng
+├── .env                  ← chứa GOOGLE_API_KEY (chưa push)
+├── .env.example          ← mẫu env
+├── .gitignore            ← loại bỏ node_modules, .env
 ├── package.json
-├── .gitignore
-└── README.md
+└── README.md             ← mô tả, hướng dẫn chạy, ảnh demo
+
 
 ---
 
