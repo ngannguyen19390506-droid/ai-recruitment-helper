@@ -55,9 +55,14 @@ ai-recruitment-helper/
 ├── .gitignore
 └── README.md
 
+---
+
 ## 🧑‍💻 Tác giả
 - **Như, Nguyên, Ngân**  
   GitHub: [@ngannguyen19390506-droid](https://github.com/ngannguyen19390506-droid)
+
+---
+
 
 ## 📝 Ghi chú
 - Không push file `.env` lên GitHub  
