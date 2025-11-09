@@ -1,15 +1,65 @@
-# 🤖 AI Recruitment Helper (Gemini API)
+# 🤖 AI Recruitment Helper
+Ứng dụng web tạo câu hỏi phỏng vấn tự động bằng AI (Gemini API) — xây dựng bằng Node.js + Express + HTML/CSS thuần.
 
-Ứng dụng demo sinh câu hỏi phỏng vấn kỹ thuật tự động bằng Google Gemini API.
-
----
-
-## 🚀 Chức năng
-- Nhận thông tin ứng viên (tên, vị trí, kinh nghiệm, kỹ năng)
-- Sinh danh sách câu hỏi phỏng vấn phù hợp (Technical, Scenario, Behavioral)
-- Trả về dữ liệu dạng JSON chuẩn
-- API được xây dựng bằng Node.js + Express + Gemini API
+<p align="center">
+  <img src="public/demo-ui.png" width="700" alt="AI Interview Helper Demo UI">
+</p>
 
 ---
 
-## ⚙️ Cấu trúc thư mục
+## 🚀 Tính năng chính
+- Form nhập thông tin ứng viên (họ tên, vị trí, kinh nghiệm, kỹ năng)
+- Tích hợp Google Gemini API để sinh câu hỏi phỏng vấn phù hợp
+- Phân loại câu hỏi theo nhóm: Technical, Behavioral, Scenario
+- Giao diện hiển thị bảng câu hỏi chuyên nghiệp, có màu sắc rõ ràng
+- Xử lý được cả trường hợp AI trả JSON lỗi, hiển thị raw text gọn gàng
+- Dễ chạy và mở rộng
+
+---
+
+## 🛠️ Công nghệ sử dụng
+- Node.js + Express — Backend server
+- Google Gemini API (Generative Language API)
+- HTML + CSS + JavaScript thuần — Frontend UI
+- dotenv — quản lý API key
+- Fetch API — gọi API backend từ client
+
+---
+
+## ⚙️ Cách chạy project
+
+1️⃣ Clone dự án
+```bash
+git clone https://github.com/ngannguyen19390506-droid/ai-recruitment-helper.git
+cd ai-recruitment-helper
+
+2️⃣npm install
+
+3️⃣GOOGLE_API_KEY=YOUR_API_KEY_HERE
+
+4️⃣node server.js
+
+5️⃣http://localhost:3000
+
+6️⃣ **📁 Cấu trúc thư mục**
+Để người khác hiểu project của bạn có gì:
+```markdown
+## 📁 Cấu trúc thư mục
+ai-recruitment-helper/
+├── public/               # Giao diện HTML/CSS/JS
+│   └── index.html
+├── server.js             # File server chính
+├── test-gemini.mjs       # File test API Gemini
+├── .env.example          # Mẫu file env
+├── package.json
+├── .gitignore
+└── README.md
+
+## 🧑‍💻 Tác giả
+- **Như, Nguyên, Ngân**  
+  GitHub: [@ngannguyen19390506-droid](https://github.com/ngannguyen19390506-droid)
+
+## 📝 Ghi chú
+- Không push file `.env` lên GitHub  
+- Chạy Node v18+ để tránh lỗi fetch  
+- Dự án phục vụ mục đích học tập và demo tích hợp AI
